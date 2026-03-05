@@ -1,4 +1,4 @@
-# ECM_2526
+# ECM_2026_DDEFI
 # Energy Price Volatility Prediction  
 ### Final Project – Machine Learning & Data Science  
 École Centrale Méditerranéenne
