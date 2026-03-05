@@ -32,12 +32,6 @@ The project combines **statistical models, machine learning, and deep learning**
 
 This project was developed as part of a **Machine Learning course at École Centrale Méditerranéenne**.
 
-Course given by:
-
-### [Sitraka Matthieu FORLER](https://www.linkedin.com/in/sitraka-matthieu-forler/)
-
-Senior Data Scientist & AI Architect  
-Professor of Applied Machine Learning
 
 ---
 
@@ -301,3 +295,11 @@ Possible extensions:
 This project shows how **machine learning can help anticipate market instability** in energy markets.
 
 Instead of predicting exact prices, the system focuses on **volatility prediction**, which is often more useful for **risk management and strategic energy purchasing decisions**.
+
+
+Course given by:
+
+### [Sitraka Matthieu FORLER](https://www.linkedin.com/in/sitraka-matthieu-forler/)
+
+Senior Data Scientist & AI Architect  
+Professor of Applied Machine Learning
