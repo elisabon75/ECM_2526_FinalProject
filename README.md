@@ -43,7 +43,13 @@ Energy traders face a critical decision every day: **Should we buy electricity n
 The primary objective of this project is to build a complete machine learning pipeline to **predict future volatility levels** and support these strategic, high-stakes decisions.
 
 ---
+## 👥 Project Team
 
+* **[Elisa Bon](https://www.linkedin.com/in/elisa-bon-298651299/)** – Machine Learning Student
+* **[Alexis Moisdon](https://www.linkedin.com/in/alexis-moisdon-b09062249/)** – Machine Learning Student
+* **[Coralie Brouillet](https://www.linkedin.com/in/coralie-brouillet/)** – Machine Learning Student
+
+---
 ## 🚀 Objectives & Performance Targets
 
 ### Main Goals
@@ -165,23 +171,8 @@ This project was developed as part of a **Machine Learning course** at École Ce
 
 **Course given by:** 🎓 **[Sitraka Matthieu FORLER](https://www.linkedin.com/in/sitraka-matthieu-forler/)** *Senior Data Scientist & AI Architect | Professor of Applied Machine Learning*
 
-## 👥 Project Team
 
-* **[Elisa Bon](https://www.linkedin.com/in/elisa-bon-298651299/)** – Machine Learning Student
-* **[Alexis Moisdon](https://www.linkedin.com/in/alexis-moisdon-b09062249/)** – Machine Learning Student
-* **[Coralie Brouillet](https://www.linkedin.com/in/coralie-brouillet/)** – Machine Learning Student
 
 ---
 *Main repository: **ECM_2526_FinalProject***
 
-Course given by:
-
-
-
-### [Sitraka Matthieu FORLER](https://www.linkedin.com/in/sitraka-matthieu-forler/)
-
-
-
-Senior Data Scientist & AI Architect  
-
-Professor of Applied Machine Learning
