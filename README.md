@@ -1,305 +1,187 @@
-# ECM_2026_DDEFI
-# Energy Price Volatility Prediction  
-### Final Project – Machine Learning & Data Science  
-École Centrale Méditerranéenne
+<div align="center">
+
+# ⚡ Energy Price Volatility Prediction
+### ECM_2026_DDEFI | Final Project – Machine Learning & Data Science
+**École Centrale Méditerranéenne**
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
+![XGBoost](https://img.shields.io/badge/XGBoost-179A9A?style=for-the-badge&logo=xgboost&logoColor=white)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
+
+*Anticipating market instability through Statistical Models, Machine Learning, and Deep Learning.*
+
+</div>
 
 ---
 
-# Project Overview
+## 📖 Project Overview
 
-Energy markets have become increasingly volatile in recent years. Electricity and gas prices fluctuate due to weather conditions, geopolitical tensions, production constraints, and macroeconomic shocks.
+Energy markets have become increasingly volatile in recent years. Electricity and gas prices fluctuate rapidly due to weather conditions, geopolitical tensions, production constraints, and macroeconomic shocks.
 
-Unlike many commodities, **electricity cannot be stored economically at large scale**. Market actors must therefore constantly decide whether to:
+> **Crucial context:** Unlike many commodities, **electricity cannot be stored economically at a large scale**. 
 
-- buy on the **spot market**
-- secure **future contracts**
-- increase their **hedging exposure**
+Market actors must constantly decide whether to buy on the **spot market**, secure **future contracts**, or increase their **hedging exposure**.
 
-This project focuses on **predicting volatility rather than predicting exact prices**.
+This project focuses on **predicting volatility rather than predicting exact prices**. Anticipating volatility helps decision-makers:
+- 🛡️ Avoid extreme market instability
+- 📉 Reduce financial risk
+- 🛒 Optimize purchasing strategies and energy procurement timing
 
-Anticipating volatility helps decision-makers:
-
-- avoid extreme market instability
-- optimize purchasing strategies
-- reduce financial risk
-- improve energy procurement timing
-
-The project combines **statistical models, machine learning, and deep learning** to build a volatility forecasting system and a decision-support dashboard.
-
----
-
-# Teaching & Supervision
-
-This project was developed as part of a **Machine Learning course at École Centrale Méditerranéenne**.
 
 
 ---
 
-# Project Team
+## 🎯 Problem Statement
 
-### Students
+Energy traders face a critical decision every day: **Should we buy electricity now on the spot market, or lock in a future contract?**
 
-### [Elisa Bon](https://www.linkedin.com/in/elisa-bon-298651299/)
-Machine Learning Student – École Centrale Méditerranéenne
+* 🔴 **If HIGH volatility is expected:** Securing a future contract can reduce risk.
+* 🟢 **If LOW volatility is expected:** Buying on the spot market may be cheaper.
 
-### [Alexis Moisdon](https://www.linkedin.com/in/alexis-moisdon-b09062249/)
-Machine Learning Student – École Centrale Méditerranéenne
-
-### [Coralie Brouillet](https://www.linkedin.com/in/coralie-brouillet/)
-Machine Learning Student – École Centrale Méditerranéenne
+The primary objective of this project is to build a complete machine learning pipeline to **predict future volatility levels** and support these strategic, high-stakes decisions.
 
 ---
 
-# Repository
+## 🚀 Objectives & Performance Targets
 
-Main project repository:
+### Main Goals
+* 🔄 **Build a robust data pipeline** integrating multiple temporal and external sources.
+* 🔮 **Predict volatility** at multiple horizons: `1 day`, `1 week`, and `1 month`.
+* 📊 **Benchmark models:** Compare Statistical, Machine Learning, and Deep Learning approaches.
+* 🖥️ **Deliver a dashboard** that generates actionable volatility alerts.
 
-**ECM_2526_FinalProject**
-
-Reference notebook used as inspiration for deep learning models:
-
-https://www.kaggle.com/code/dimitriosroussis/electricity-price-forecasting-with-dnns-eda
-
----
-
-# Problem Statement
-
-Energy traders face a critical decision every day:
-
-**Should we buy electricity now on the spot market or lock in a future contract?**
-
-If **high volatility** is expected:
-- securing a **future contract** can reduce risk.
-
-If **low volatility** is expected:
-- buying on the **spot market** may be cheaper.
-
-The objective of the project is therefore to **predict future volatility levels** to support these strategic decisions.
+### Performance Targets
+* 📈 Improve prediction metrics by **15% vs. baseline models**.
+* 🎯 Achieve **>70% precision** in volatility alerts.
+* 🛡️ Demonstrate concrete **risk reduction via backtesting**.
 
 ---
 
-# Objectives
+## 🏗️ System Architecture
 
-The goal is to build a **complete machine learning pipeline** capable of forecasting volatility.
+The project follows a full, end-to-end data science lifecycle. A visualization interface is planned via **Replit** and an API layer.
 
-### Main goals
+1. `Data Collection` ➔ 2. `Preprocessing` ➔ 3. `Feature Engineering` ➔ 4. `Model Training` ➔ 5. `Volatility Prediction` ➔ 6. `Alert Generation` ➔ 7. `Dashboard`
 
-- Build a **data pipeline** integrating multiple sources
-- Predict volatility at several horizons:
-  - 1 day
-  - 1 week
-  - 1 month
-- Compare **statistical models, ML models and deep learning models**
-- Deliver a **dashboard generating volatility alerts**
 
-### Performance targets
-
-- Improve prediction metrics by **15% vs baseline**
-- Achieve **>70% precision in volatility alerts**
-- Demonstrate **risk reduction via backtesting**
 
 ---
 
-# Data Sources
+## 🗄️ Data Sources
 
-Multiple data sources are integrated.
+To capture the complex dynamics of the energy market, we integrate multiple datasets:
 
-### Energy data
-
-- Electricity prices (EPEX Spot)
-- Gas prices
-- Oil prices
-
-### External variables
-
-- Weather data  
-  temperature  
-  humidity  
-  anomalies
-
-- Renewable production
-
-### Calendar variables
-
-- day of week
-- month
-- weekends
-- public holidays
+| Category | Variables Included |
+| :--- | :--- |
+| **⚡ Energy Data** | Electricity prices (EPEX Spot), Gas prices, Oil prices |
+| **🌦️ External Variables** | Weather data (temperature, humidity, anomalies), Renewable production |
+| **📅 Calendar Variables**| Day of week, Month, Weekends, Public holidays |
 
 ---
 
-# Feature Engineering
+## ⚙️ Feature Engineering
 
-Time-series transformations are applied.
+Time-series transformations are critical for exposing patterns to our models.
 
-### Temporal features
-
-- Lag variables  
-  1 day  
-  7 days  
-  30 days
-
-- Rolling statistics  
-  rolling mean  
-  rolling variance  
-  rolling standard deviation
-
-### Financial transformations
-
-- Log returns
-- Historical volatility
-
-### Dimensionality reduction
-
-- PCA (Principal Component Analysis)
+* **Temporal Features:** Lag variables (`1d`, `7d`, `30d`), Rolling statistics (mean, variance, standard deviation).
+* **Financial Transformations:** Log returns, Historical volatility.
+* **Dimensionality Reduction:** Principal Component Analysis (PCA) to manage feature bloat.
 
 ---
 
-# Models
+## 🧠 Modeling Approaches
 
-Several modeling approaches are compared.
+We compare a wide variety of approaches, scaling from simple baselines to advanced neural networks.
 
-## Baseline Models
+### 1️⃣ Baseline & Statistical Models
+* **Naive Model:** $price(t) = price(t-1)$
+* **Moving Averages:** 7-day and 30-day windows
+* **ARIMA**
+* **GARCH (1,1):** Specifically for baseline volatility prediction.
 
-- Naive model  
-  price(t) = price(t−1)
+### 2️⃣ Machine Learning
+* **XGBoost**
+* **Random Forest**
 
-- Moving averages  
-  7 days  
-  30 days
+### 3️⃣ Deep Learning 
+*Inspired by this [Kaggle Reference Notebook](https://www.kaggle.com/code/dimitriosroussis/electricity-price-forecasting-with-dnns-eda).*
 
-- ARIMA
+* **LSTM** & **Stacked LSTM**
+* **CNN** & **CNN-LSTM**
+* **Time Distributed MLP**
+* **Encoder-Decoder (Seq2Seq)**
 
----
-
-## Statistical Models
-
-- **GARCH (1,1)**  
-for volatility prediction
-
----
-
-## Machine Learning Models
-
-- **XGBoost**
-- **Random Forest**
+> **Note:** All deep learning models utilize multivariate time series, approximately 25 previous time steps, and the Adam optimizer.
 
 ---
 
-## Deep Learning Models
+## ⚖️ Validation Strategy & Metrics
 
-Inspired by the Kaggle notebook.
+**Chronological Split:**
+* **Train:** `70%` | **Validation:** `15%` | **Test:** `15%`
+* *Additional evaluation uses time-series cross-validation with rolling windows.*
 
-- LSTM
-- Stacked LSTM
-- CNN
-- CNN-LSTM
-- Time Distributed MLP
-- Encoder-Decoder (Seq2Seq)
-
-All deep learning models use:
-
-- multivariate time series
-- ~25 previous time steps
-- Adam optimizer
+**Key Evaluation Metrics:**
+* `RMSE`, `MAE`, `MSE` (focusing on volatility)
+* Alert Precision
+* Backtest P&L (Profit & Loss)
 
 ---
 
-# Validation Strategy
+## 🚨 Volatility Alert System
 
-Chronological split:
+Predicted volatility is converted into distinct **risk levels** using z-score detection and anomaly detection (Isolation Forest).
 
-- Train: 70%
-- Validation: 15%
-- Test: 15%
-
-Additional evaluation:
-
-- Time-series cross validation with rolling windows
-
-### Metrics
-
-- RMSE
-- MAE
-- MSE (volatility)
-- Alert precision
-- Backtest P&L
+| Status | Risk Level | Meaning |
+| :---: | :--- | :--- |
+| 🟢 | **Stable** | Low expected volatility. Favorable for spot market purchasing. |
+| 🟡 | **Moderate** | Medium market uncertainty. |
+| 🔴 | **High** | Strong market instability. Consider future contracts/hedging. |
 
 ---
 
-# Volatility Alert System
+## ⚠️ Limitations
 
-Predicted volatility is converted into **risk levels**.
-
-| Risk Level | Meaning |
-|------------|--------|
-| Stable | Low expected volatility |
-| Moderate | Medium market uncertainty |
-| High | Strong market instability |
-
-Alerts are generated using:
-
-- predicted volatility thresholds
-- z-score detection
-- anomaly detection (Isolation Forest)
+This system is designed as a **decision support tool**, not an autonomous agent. 
+* ❌ It does **not** perform automated trading.
+* ❌ It does **not** optimize full trading portfolios or entirely eliminate financial risk.
+* 📉 System performance is heavily dependent on real-time data quality and extreme, unprecedented market shocks.
 
 ---
 
-# System Architecture
-
-The project follows a full **data science lifecycle**:
-
-1. Data collection  
-2. Data preprocessing  
-3. Feature engineering  
-4. Model training  
-5. Volatility prediction  
-6. Alert generation  
-7. Visualization dashboard
-
-A visualization interface is planned via **Replit** and an API layer.
+## 🔮 Future Work
+- [ ] Integration of **Transformer-based** time-series models.
+- [ ] Deployment of real-time streaming data pipelines.
+- [ ] Application of **Reinforcement Learning** for dynamic trading strategies.
+- [ ] Direct integration with professional energy trading APIs.
 
 ---
 
-# Limitations
+## 👨‍🏫 Teaching & Supervision
 
-The system is a **decision support tool**.
+This project was developed as part of a **Machine Learning course** at École Centrale Méditerranéenne.
 
-It does not:
+**Course given by:** 🎓 **[Sitraka Matthieu FORLER](https://www.linkedin.com/in/sitraka-matthieu-forler/)** *Senior Data Scientist & AI Architect | Professor of Applied Machine Learning*
 
-- perform automated trading
-- optimize full trading portfolios
-- eliminate financial risk
+## 👥 Project Team
 
-Performance depends on:
-
-- data quality
-- market conditions
-- model assumptions
+* **[Elisa Bon](https://www.linkedin.com/in/elisa-bon-298651299/)** – Machine Learning Student
+* **[Alexis Moisdon](https://www.linkedin.com/in/alexis-moisdon-b09062249/)** – Machine Learning Student
+* **[Coralie Brouillet](https://www.linkedin.com/in/coralie-brouillet/)** – Machine Learning Student
 
 ---
-
-# Future Work
-
-Possible extensions:
-
-- Transformer-based time-series models
-- Real-time data pipelines
-- Reinforcement learning for trading strategies
-- Integration with professional energy trading platforms
-
----
-
-# Conclusion
-
-This project shows how **machine learning can help anticipate market instability** in energy markets.
-
-Instead of predicting exact prices, the system focuses on **volatility prediction**, which is often more useful for **risk management and strategic energy purchasing decisions**.
-
+*Main repository: **ECM_2526_FinalProject***
 
 Course given by:
 
+
+
 ### [Sitraka Matthieu FORLER](https://www.linkedin.com/in/sitraka-matthieu-forler/)
 
+
+
 Senior Data Scientist & AI Architect  
+
 Professor of Applied Machine Learning
