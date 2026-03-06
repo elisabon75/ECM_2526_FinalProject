@@ -5,7 +5,7 @@
 **École Centrale Méditerranéenne**
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-[![Kaggle](https://img.shields.shields.shields.shields.shields.io/badge/Kaggle-Notebook-blue.svg)](https://www.kaggle.com/code/alexismoisdon/projet-data-du-meilleur-groupe/edit)
+[![Kaggle](https://img.shields.io/badge/Open%20in-Kaggle-20BEFF?style=for-the-badge&logo=Kaggle&logoColor=white)](https://www.kaggle.com/code/alexismoisdon/projet-data-du-meilleur-groupe)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
 ![XGBoost](https://img.shields.io/badge/XGBoost-179A9A?style=for-the-badge&logo=xgboost&logoColor=white)
 ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
