@@ -14,13 +14,49 @@
 
 </div>
 
-##  Vue d'ensemble et Problématique
+---
+
+##  Contenu de ce Repository
+
+Ce GitHub est organisé pour montrer le passage d'une phase de recherche (Notebook) à une solution industrialisée (Scripts).
+
+###  1. Dossier `Data/` (Les Datafiles)
+Ce dossier contient la base de notre projet : les données brutes et les résultats.
+- **Données sources :** Prix EPEX Spot, cours du Gaz TTF et données Météo France.
+- **Output :** Le fichier `volatility_dashboard_data.csv`, généré par nos scripts, qui alimente le tableau de bord final.
+
+###  2. Dossier `Notebooks/` (Recherche & Exploration)
+C'est ici que se trouve notre **code Google Colab (`.ipynb`)**. 
+- Il contient toute l'analyse exploratoire des données (EDA), les tests de modèles et les visualisations graphiques. C'est le laboratoire de recherche du projet.
+
+###  3. Dossier `Script/` (Industrialisation & Automatisation)
+C'est la partie la plus importante pour la mise en production. Nous avons transformé le code "brouillon" du Notebook en **fichiers Python (`.py`) modulaires**.
+- **Pourquoi ?** Pour automatiser le processus. Au lieu de relancer des cellules de code manuellement, un seul script (`main.py`) exécute tout le pipeline (Nettoyage -> Features -> Modèles).
+- **Avantage :** Cela rend le projet reproductible, plus rapide et prêt à être intégré dans une application réelle.
+
+###  4. Dossier `Presentation/` (Gestion de Projet)
+Ce dossier regroupe tous les documents stratégiques et théoriques du projet :
+- **Cahier des Charges & Problématique :** Définition des objectifs SMART et du périmètre.
+- **TD Product Management :** Analyse de la proposition de valeur ("Pourquoi le ML ?", "Quelle valeur pour le client ?").
+- **Slides PowerPoint :** Le support de présentation finale pour notre soutenance.
+
+###  Analyse Interactive sur Kaggle
+
+Pour une lecture fluide et visuelle de notre étude, nous avons mis en place un Notebook Kaggle. Vous y trouverez l'intégralité de notre démarche exploratoire, les courbes d'apprentissage des modèles et les graphiques de prédiction interactifs.
+
+**Cliquez sur le bouton ci-dessus pour accéder au Notebook :**
+
+---
+
+## Résumé du projet
+
+###  Vue d'ensemble et Problématique
 
 L’électricité ne peut pas être stockée à grande échelle. Les acteurs doivent jongler entre le marché **spot** (jour le jour) et les **contrats à terme**. Notre solution ne prédit pas le prix exact, mais la **volatilité** pour aider à choisir la meilleure stratégie :
 - 🔴 **Forte volatilité anticipée :** Sécuriser un contrat à terme pour limiter les risques.
 - 🟢 **Faible volatilité anticipée :** Acheter sur le marché spot pour optimiser les coûts.
 
-##  Système d'Alerte de Volatilité
+###  Système d'Alerte de Volatilité
 
 Nous convertissons les prédictions numériques en niveaux de risque actionnables via des détections de seuils (Z-score) et des algorithmes d'isolation (Isolation Forest).
 
@@ -30,42 +66,42 @@ Nous convertissons les prédictions numériques en niveaux de risque actionnable
 | 🟡 | **Modéré** | Incertitude moyenne sur le marché. |
 | 🔴 | **Élevé** | Forte instabilité. Recommandation de couverture (hedging). |
 
-##  Architecture du Système
+###  Architecture du Système
 
 Le projet suit un cycle de vie complet de Data Science, industrialisé via un pipeline automatisé :
 1. `Collecte` ➔ 2. `Nettoyage` ➔ 3. `Feature Engineering` ➔ 4. `Entraînement` ➔ 5. `Prédiction` ➔ 6. `Génération d'Alertes` ➔ 7. `Dashboard`
 
-## Project Team
+### Project Team
 
 * **[Elisa Bon](https://www.linkedin.com/in/elisa-bon-298651299/)** – Machine Learning Student
 * **[Alexis Moisdon](https://www.linkedin.com/in/alexis-moisdon-b09062249/)** – Machine Learning Student
 * **[Coralie Brouillet](https://www.linkedin.com/in/coralie-brouillet/)** – Machine Learning Student
 
-## Détails Techniques & Modélisation
+### Détails Techniques & Modélisation
 
-### Feature Engineering
+#### Feature Engineering
 * **Variables Temporelles :** Lags (1j, 7j, 30j), statistiques glissantes (moyenne, écart-type).
 * **Transformations Financières :** Rendements logarithmiques (Log-returns) et volatilité historique.
 * **Réduction de dimension :** Analyse en Composantes Principales (PCA) pour le débruitage.
 
-### Modèles Comparés
+#### Modèles Comparés
 * **Statistiques :** Naïve, Moyennes Mobiles, ARIMA, **GARCH (1,1)**.
 * **Machine Learning :** XGBoost, Random Forest.
 * **Deep Learning :** LSTM, Stacked LSTM, CNN, CNN-LSTM, Encoder-Decoder.
 
-##  Stratégie de Validation & Performance
+###  Stratégie de Validation & Performance
 
 * **Découpage Chronologique :** Train (70%), Validation (15%), Test (15%).
 * **Objectifs :** Amélioration de **15%** par rapport aux modèles baselines et précision des alertes supérieure à **70%**.
 * **Backtesting :** Évaluation des gains réels (P&L) via une simulation historique.
 
-##  Perspectives (Future Work)
+###  Perspectives (Future Work)
 
 - [ ] Intégration de modèles de séries temporelles basés sur les **Transformers**.
 - [ ] Déploiement de pipelines de données en temps réel (Streaming).
 - [ ] Utilisation de l'**Apprentissage par Renforcement** pour des stratégies de trading dynamique.
 
-##  Installation et Utilisation Rapide
+###  Installation et Utilisation Rapide
 
 ```bash
 # 1. Installer les dépendances
@@ -75,7 +111,7 @@ pip install -r requirements.txt
 python Script/main.py
 ```
 
-## Teaching & Supervision
+### Teaching & Supervision
 
 This project was developed as part of a **Machine Learning course** at École Centrale Méditerranéen.
 
