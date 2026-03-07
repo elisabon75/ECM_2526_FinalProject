@@ -74,7 +74,7 @@ Comment prévoir les périodes de forte volatilité des prix de l’électricit�
 * **Split chronologique :** Train (70%), Validation (15%), Test (15%). Time-series cross-validation.
 * **Métriques :** RMSE, MAE pour les prix. MSE pour la volatilité. Précision des alertes de risque.
 
-## 🎯 Vision Produit (Product Management TD)
+# Vision Produit (Product Management TD)
 
 **What is the background?** Le contexte de notre projet est la forte volatilité des prix de l’électricité et du gaz en Europe. Avec la dérégulation des marchés, la dépendance à la météo, les problèmes géopolitiques et les limites du nucléaire ou des renouvelables, les prix bougent beaucoup d’un jour à l’autre. Comme l’électricité ne se stocke pas facilement, les acteurs sont obligés de décider en permanence s’ils achètent sur le marché spot, s’ils prennent des contrats à terme ou s’ils se couvrent davantage. D’où l’idée : plutôt que de prédire le prix exact, on cherche à anticiper les périodes où la volatilité va être forte.
 
