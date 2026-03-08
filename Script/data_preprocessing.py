@@ -6,12 +6,10 @@ import json
 def load_and_clean_data(chemin_elec, chemin_gaz, chemin_meteo):
     print("Extraction et nettoyage des données brutes...")
 
-    # ==========================================
     # 1. ÉLECTRICITÉ (Daily)
-    # ==========================================
+
     df_elec = pd.read_csv(chemin_elec)
 
-    # 🚨 LA CLÉ EST ICI : FILTRER UNIQUEMENT LA FRANCE ! 🚨
     if 'Country' in df_elec.columns:
         df_elec = df_elec[df_elec['Country'] == 'France'].copy()
 
@@ -22,9 +20,8 @@ def load_and_clean_data(chemin_elec, chemin_gaz, chemin_meteo):
 
     daily_avg_elec = df_elec.groupby('Date')['Price (EUR/MWhe)'].mean().reset_index()
 
-    # ==========================================
     # 2. GAZ (TTF)
-    # ==========================================
+
     df_gas = pd.read_csv(chemin_gaz)
 
     colonnes_prix = ['Dernier ((EUR/MWh)', 'Ouv.', ' Plus Haut', 'Plus Bas']
@@ -37,9 +34,8 @@ def load_and_clean_data(chemin_elec, chemin_gaz, chemin_meteo):
     df_gas = df_gas.infer_objects(copy=False)
     df_gas = df_gas.interpolate(method='linear', numeric_only=True)
 
-    # ==========================================
     # 3. MÉTÉO (JSON)
-    # ==========================================
+
     with open(chemin_meteo, 'r', encoding='utf-8') as f:
         meteo_data = json.load(f)
 
@@ -60,6 +56,6 @@ def merge_datasets(df_elec, df_gaz, df_meteo):
     df_final = pd.merge(df_merged, df_meteo, on='Date', how='inner')
 
     df_final = df_final.dropna().reset_index(drop=True)
-    print("✅ Fusion réussie ! Taille du dataset final :", df_final.shape)
+    print("Taille du dataset final :", df_final.shape)
 
     return df_final
