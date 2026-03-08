@@ -14,27 +14,22 @@ def engineer_features(df):
 
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
 
-    # 🚨 EXACTEMENT LES LAGS DU KAGGLE (1 à 5)
     for i in range(1, 6):
         df[f'lag_ret_{i}'] = df['Elec_Log_Returns'].shift(i)
 
-    # 🚨 LE JOUR DE LA SEMAINE (Comme dans ton Kaggle)
     df['day_of_week'] = df['Date'].dt.dayofweek
 
-    # LA CIBLE DU COLAB
     df['Real_Volatility'] = df['Elec_Log_Returns'].abs()
 
     df_features = df.dropna().reset_index(drop=True)
     print(f"Feature Engineering terminé. {len(df_features)} lignes conservées.")
 
-    # ... (le reste de ton code au dessus)
     df_features = df.dropna().reset_index(drop=True)
 
-    # 🚨 LA LIGNE MAGIQUE POUR REPRODUIRE LE KAGGLE :
-    # Dans ton Kaggle, la séparation test_size=0.2 donnait 354 jours de test.
+    # Dans  Kaggle, la séparation test_size=0.2 donnait 354 jours de test.
     # Cela signifie que le dataset complet faisait exactement 1770 lignes (354 * 5).
     # On force donc le dataset à s'arrêter exactement à 1770 lignes pour couper
-    # les jours "nouveaux" qui faussent les moyennes !
+    # les jours "nouveaux" qui faussent les moyennes
     df_features = df_features.iloc[:1770]
 
     print(f"Feature Engineering terminé. {len(df_features)} lignes conservées.")
