@@ -28,11 +28,18 @@ Ce dossier contient la base de notre projet : les données brutes et les résult
 ###  2. Dossier `Notebooks/` (Recherche & Exploration)
 C'est ici que se trouve notre **code Google Colab (`.ipynb`)**. 
 - Il contient toute l'analyse exploratoire des données (EDA), les tests de modèles et les visualisations graphiques. C'est le laboratoire de recherche du projet.
+- 
+### 3. Dossier `Script/` (Industrialisation & Automatisation)
 
-###  3. Dossier `Script/` (Industrialisation & Automatisation)
-C'est la partie la plus importante pour la mise en production. Nous avons transformé le code "brouillon" du Notebook en **fichiers Python (`.py`) modulaires**.
-- **Pourquoi ?** Pour automatiser le processus. Au lieu de relancer des cellules de code manuellement, un seul script (`main.py`) exécute tout le pipeline (Nettoyage -> Features -> Modèles).
-- **Avantage :** Cela rend le projet reproductible, plus rapide et prêt à être intégré dans une application réelle.
+C'est la partie la plus critique pour la mise en production. Nous avons transformé le code exploratoire du Notebook en une architecture de fichiers Python (`.py`) entièrement modulaires.
+
+**Pourquoi ?** Pour automatiser de bout en bout le traitement de la donnée. Au lieu de relancer des cellules de code manuellement, l'exécution d'un seul script (`main.py`) orchestre l'ensemble du pipeline :
+* Extraction et nettoyage des données brutes.
+* Feature engineering (calcul des rendements, lags, volatilité réelle).
+* Entraînement et prédiction des modèles (Économétrie, Machine Learning, Deep Learning) avec fixation des variables aléatoires pour garantir une reproductibilité stricte.
+* Exportation unifiée des prédictions dans un format prêt à l'emploi.
+
+**Avantage :** Cette architecture rend le projet robuste, reproductible à l'identique, et prêt à absorber de nouvelles données en temps réel. Elle intègre également une couche de restitution visuelle via un dashboard interactif (`dashboard.py`), prouvant ainsi la capacité du projet à s'insérer dans une application métier concrète et utilisable par un client final.
 
 ###  4. Dossier `Presentation/` (Gestion de Projet)
 Ce dossier regroupe tous les documents stratégiques et théoriques du projet :
@@ -109,8 +116,10 @@ pip install -r requirements.txt
 
 # 2. Lancer le pipeline complet
 python Script/main.py
-```
 
+# 3. Démarrer la visualisation interactive (Dashboard)
+streamlit run Script/dashboard.py
+```
 ### Teaching & Supervision
 
 This project was developed as part of a **Machine Learning course** at École Centrale Méditerranéen.
