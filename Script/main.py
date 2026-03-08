@@ -7,9 +7,8 @@ from models import train_garch_model, train_arx_model, get_baseline_models, trai
 
 
 def main():
-    print("=====================================================")
-    print("🚀 LANCEMENT DU PIPELINE AUTOMATISÉ (DDEFI 2025)")
-    print("=====================================================")
+    
+    print(" LANCEMENT DU PIPELINE AUTOMATISÉ (DDEFI 2025/26)")
 
     PATH_ELEC = "../Data/european_wholesale_electricity_price_data_daily.csv"
     PATH_GAZ = "../Data/dutch_ttf_natural_gas.csv"
@@ -53,7 +52,7 @@ def main():
         output_path = "../Data/volatility_dashboard_data.csv"
         df_results.to_csv(output_path)
 
-        print(f"✅ TERMINÉ ! Fichier complet créé : {output_path}")
+        print(f"TERMINÉ ! Fichier complet créé : {output_path}")
         print("=====================================================")
 
     except Exception as e:
