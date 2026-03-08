@@ -2,7 +2,7 @@
 
 # ⚡ Energy Price Volatility Prediction
 ### ECM_2026_DDEFI | Final Project – Machine Learning & Data Science
-**École Centrale Méditerranéen**
+**École Centrale Méditerranée**
 
 <p align="center">
   <a href="https://www.kaggle.com/code/alexismoisdon/projet-data-du-meilleur-groupe">
@@ -23,7 +23,6 @@ Ce GitHub est organisé pour montrer le passage d'une phase de recherche (Notebo
 ###  1. Dossier `Data/` (Les Datafiles)
 Ce dossier contient la base de notre projet : les données brutes et les résultats.
 - **Données sources :** Prix EPEX Spot, cours du Gaz TTF et données Météo France.
-- **Output :** Le fichier `volatility_dashboard_data.csv`, généré par nos scripts, qui alimente le tableau de bord final.
 
 ###  2. Dossier `Notebooks/` (Recherche & Exploration)
 C'est ici que se trouve notre **code Google Colab (`.ipynb`)**. 
@@ -93,8 +92,8 @@ Le projet suit un cycle de vie complet de Data Science, industrialisé via un pi
 
 #### Modèles Comparés
 * **Statistiques :** Naïve, Moyennes Mobiles, ARIMA, **GARCH (1,1)**.
-* **Machine Learning :** XGBoost, Random Forest.
-* **Deep Learning :** LSTM, Stacked LSTM, CNN, CNN-LSTM, Encoder-Decoder.
+* **Machine Learning :** Random Forest.
+* **Deep Learning :** LSTM.
 
 ###  Stratégie de Validation & Performance
 
