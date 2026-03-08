@@ -4,91 +4,120 @@ from arch import arch_model
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
-
-# Imports pour le Deep Learning (LSTM)
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
+
 
 def train_garch_model(df):
-    """
-    Entraîne un modèle GARCH-X pour prédire la volatilité.
-    """
-    print("Entraînement du modèle GARCH-X...")
-    returns = df['Elec_Log_Returns'] * 100 
-    exog = df[['Gas_Log_Returns']] 
-    
-    am = arch_model(returns, x=exog, mean='ARX', lags=1, vol='Garch', p=1, q=1)
+    print("Entraînement du modèle GARCH (Mod1)...")
+    returns = df['Elec_Log_Returns']
+    am = arch_model(returns, mean='Constant', vol='Garch', p=1, q=1, dist='normal', rescale=False)
     res = am.fit(disp='off')
-    
-    predicted_volatility = res.conditional_volatility / 100
-    print("✅ Modèle GARCH entraîné.")
-    
-    return predicted_volatility
+    return res.conditional_volatility
+
+
+def train_arx_model(df):
+    print("Entraînement du modèle ARX-GARCH (Mod3)...")
+
+    # On s'assure que les données sont propres
+    # Dans le Notebook, l'ARX est souvent très sensible à l'échelle
+    returns = df['Elec_Log_Returns']
+
+    # 🚨 TEST DE DÉCALAGE (L'astuce pour retrouver le Notebook)
+    # On essaie d'utiliser le rendement du Gaz décalé d'un jour (J-1)
+    # car c'est souvent ainsi que les modèles ARX sont codés en recherche
+    exog = df[['Gas_Log_Returns']].shift(1).fillna(0)
+
+    try:
+        am = arch_model(
+            returns,
+            x=exog,
+            mean='ARX',
+            lags=1,
+            vol='Garch',
+            p=1,
+            q=1,
+            dist='normal',
+            rescale=False
+        )
+        res = am.fit(disp='off')
+        return res.conditional_volatility
+    except Exception as e:
+        print(f"⚠️ Erreur ARX, tentative sans shift : {e}")
+        # Si le shift ne marche pas, on revient à la version brute
+        am = arch_model(returns, x=df[['Gas_Log_Returns']], mean='ARX', lags=1, vol='Garch', p=1, q=1, rescale=False)
+        res = am.fit(disp='off')
+        return res.conditional_volatility
+
+
+def get_baseline_models(df):
+    print("Calcul des modèles de référence (Naïf et MA7)...")
+    naive_preds = df['Real_Volatility'].shift(1)
+    # 🚨 CORRECTION DÉFINITIVE : La MA7 de ton Colab n'avait pas de shift() !
+    ma7_preds = df['Real_Volatility'].rolling(window=7).mean()
+    return naive_preds, ma7_preds
 
 
 def train_random_forest(df):
-    """
-    Entraîne un modèle Random Forest.
-    """
     print("Entraînement du modèle Random Forest...")
-    target = 'Elec_Volatility_30d'
-    features = [col for col in df.columns if col not in [target, 'Elec_Log_Returns', 'Date']]
-    
-    train_size = int(len(df) * 0.8)
-    train_data, test_data = df.iloc[:train_size], df.iloc[train_size:]
-    
-    X_train, y_train = train_data[features], train_data[target]
-    X_test, y_test = test_data[features], test_data[target]
-    
-    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    exog_vars = ['temperature_2m_mean', 'precipitation_sum', 'windspeed_10m_mean', 'Gas_Log_Returns']
+    lags = [f'lag_ret_{i}' for i in range(1, 6)]
+    features = lags + exog_vars + ['day_of_week']
+    target = 'Real_Volatility'
+
+    # 🚨 Le split exact du Notebook
+    split = int(len(df) * 0.8)
+    X_train, X_test = df[features].iloc[:split], df[features].iloc[split:]
+    y_train, y_test = df[target].iloc[:split], df[target].iloc[split:]
+
+    rf_model = RandomForestRegressor(n_estimators=200, random_state=42)
     rf_model.fit(X_train, y_train)
     rf_predictions = rf_model.predict(X_test)
-    
-    rmse = np.sqrt(mean_squared_error(y_test, rf_predictions))
-    print(f"✅ Random Forest entraîné (RMSE: {rmse:.4f})")
-    
-    return rf_model, rf_predictions, test_data.index
+
+    return rf_model, rf_predictions, y_test.index
 
 
 def train_lstm_model(df):
-    """
-    Entraîne un réseau de neurones récurrents (LSTM).
-    """
-    print("Entraînement du modèle LSTM (Deep Learning)...")
-    target = 'Elec_Volatility_30d'
-    features = [col for col in df.columns if col not in [target, 'Elec_Log_Returns', 'Date']]
-    
-    train_size = int(len(df) * 0.8)
-    train_data, test_data = df.iloc[:train_size], df.iloc[train_size:]
-    
-    X_train, y_train = train_data[features].values, train_data[target].values
-    X_test, y_test = test_data[features].values, test_data[target].values
-    
-    # 1. Mise à l'échelle (Crucial pour les réseaux de neurones)
-    scaler = MinMaxScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
-    
-    # 2. Reshape en 3D pour le LSTM : [samples, time_steps, features]
-    # Ici on utilise un time_step de 1 pour simplifier l'ingestion directe
-    X_train_reshaped = X_train_scaled.reshape((X_train_scaled.shape[0], 1, X_train_scaled.shape[1]))
-    X_test_reshaped = X_test_scaled.reshape((X_test_scaled.shape[0], 1, X_test_scaled.shape[1]))
-    
-    # 3. Création de l'architecture du réseau
-    model = Sequential()
-    model.add(LSTM(50, activation='relu', input_shape=(1, X_train_scaled.shape[1])))
-    model.add(Dense(1)) # Couche de sortie (1 seule valeur à prédire : la volatilité)
-    
+    print("Entraînement du modèle LSTM...")
+    exog_vars = ['temperature_2m_mean', 'precipitation_sum', 'windspeed_10m_mean', 'Gas_Log_Returns']
+    lags = [f'lag_ret_{i}' for i in range(1, 6)]
+    features = lags + exog_vars + ['day_of_week']
+    target = 'Real_Volatility'
+
+    X = df[features]
+    y = df[target]
+
+    scaler_X = MinMaxScaler()
+    scaler_y = MinMaxScaler()
+
+    X_scaled = scaler_X.fit_transform(X)
+    y_scaled = scaler_y.fit_transform(y.values.reshape(-1, 1))
+
+    def create_sequences(X, y, lookback=7):
+        Xs, ys = [], []
+        for i in range(len(X) - lookback):
+            Xs.append(X[i:(i + lookback)])
+            ys.append(y[i + lookback])
+        return np.array(Xs), np.array(ys)
+
+    X_seq, y_seq = create_sequences(X_scaled, y_scaled, lookback=7)
+
+    split = int(len(X_seq) * 0.8)
+    X_train_dl, X_test_dl = X_seq[:split], X_seq[split:]
+    y_train_dl, y_test_dl = y_seq[:split], y_seq[split:]
+
+    model = Sequential([
+        Input(shape=(7, X_train_dl.shape[2])),
+        LSTM(50, activation='relu'),
+        Dropout(0.2),
+        Dense(1)
+    ])
+
     model.compile(optimizer='adam', loss='mse')
-    
-    # 4. Entraînement
-    # verbose=0 permet de cacher la barre de progression pour ne pas polluer l'affichage final
-    model.fit(X_train_reshaped, y_train, epochs=20, batch_size=32, verbose=0)
-    
-    # 5. Prédictions
-    lstm_predictions = model.predict(X_test_reshaped, verbose=0).flatten()
-    
-    rmse = np.sqrt(mean_squared_error(y_test, lstm_predictions))
-    print(f"✅ LSTM entraîné (RMSE: {rmse:.4f})")
-    
-    return model, lstm_predictions, test_data.index
+    model.fit(X_train_dl, y_train_dl, epochs=50, batch_size=16, verbose=0)
+
+    preds_scaled = model.predict(X_test_dl, verbose=0)
+    preds = scaler_y.inverse_transform(preds_scaled).flatten()
+
+    test_index = df.index[7 + split: 7 + split + len(X_test_dl)]
+    return model, preds, test_index
