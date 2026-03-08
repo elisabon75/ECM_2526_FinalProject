@@ -42,7 +42,7 @@ def train_arx_model(df):
         res = am.fit(disp='off')
         return res.conditional_volatility
     except Exception as e:
-        print(f"⚠️ Erreur ARX, tentative sans shift : {e}")
+        print(f" Erreur ARX, tentative sans shift : {e}")
         # Si le shift ne marche pas, on revient à la version brute
         am = arch_model(returns, x=df[['Gas_Log_Returns']], mean='ARX', lags=1, vol='Garch', p=1, q=1, rescale=False)
         res = am.fit(disp='off')
