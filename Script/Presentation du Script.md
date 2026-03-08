@@ -10,7 +10,7 @@ Le code a été découpé en plusieurs modules spécifiques pour respecter les b
 
 * **`data_preprocessing.py`** : Gère le chargement des données brutes (Électricité, Gaz, Météo), le nettoyage (gestion des valeurs manquantes par interpolation) et la fusion des différents jeux de données sur un index temporel commun.
 * **`feature_engineering.py`** : Contient les fonctions permettant de créer les variables explicatives nécessaires aux modèles (calcul des rendements, volatilité historique, création de lags).
-* **`models.py`** : Regroupe les fonctions d'entraînement et de prédiction pour nos différents modèles (GARCH, Random Forest, LSTM).
+* **`models.py`** : Regroupe les fonctions d'entraînement et de prédiction pour nos différents modèles (GARCH, Random Forest, LSTM, baseline, ...).
 * **`main.py`** : C'est le script principal (le "chef d'orchestre"). Il importe les fonctions des autres modules et exécute le pipeline complet de bout en bout.
 * **`test_verif.py`** : Script utilitaire permettant de calculer et d'afficher le classement final des modèles (via les métriques MAE et RMSE) en s'assurant que l'évaluation se fait strictement sur la même période de test pour chaque algorithme.
 * **`dashboard.py`** : Application web interactive (développée avec Streamlit) permettant de visualiser les courbes de prédiction superposées à la volatilité réelle, de cibler des périodes spécifiques, et d'afficher les scores de performance dynamiquement.
