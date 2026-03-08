@@ -23,9 +23,8 @@ def train_arx_model(df):
     # Dans le Notebook, l'ARX est souvent très sensible à l'échelle
     returns = df['Elec_Log_Returns']
 
-    # 🚨 TEST DE DÉCALAGE (L'astuce pour retrouver le Notebook)
-    # On essaie d'utiliser le rendement du Gaz décalé d'un jour (J-1)
-    # car c'est souvent ainsi que les modèles ARX sont codés en recherche
+
+    # On essaie d'utiliser le rendement du Gaz décalé d'un jour (J-1) car c'est souvent ainsi que les modèles ARX sont codés en recherche
     exog = df[['Gas_Log_Returns']].shift(1).fillna(0)
 
     try:
@@ -53,7 +52,6 @@ def train_arx_model(df):
 def get_baseline_models(df):
     print("Calcul des modèles de référence (Naïf et MA7)...")
     naive_preds = df['Real_Volatility'].shift(1)
-    # 🚨 CORRECTION DÉFINITIVE : La MA7 de ton Colab n'avait pas de shift() !
     ma7_preds = df['Real_Volatility'].rolling(window=7).mean()
     return naive_preds, ma7_preds
 
@@ -65,7 +63,6 @@ def train_random_forest(df):
     features = lags + exog_vars + ['day_of_week']
     target = 'Real_Volatility'
 
-    # 🚨 Le split exact du Notebook
     split = int(len(df) * 0.8)
     X_train, X_test = df[features].iloc[:split], df[features].iloc[split:]
     y_train, y_test = df[target].iloc[:split], df[target].iloc[split:]
