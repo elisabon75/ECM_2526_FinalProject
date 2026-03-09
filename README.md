@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ Energy Price Volatility Prediction
+# ⚡ Electricity Price Volatility Prediction
 ### ECM_2026_DDEFI | Final Project – Machine Learning & Data Science
 **École Centrale Méditerranée**
 
@@ -10,7 +10,7 @@
   </a>
 </p>
 
-*Ce projet vise à anticiper les périodes d'instabilité sur les marchés de l'électricité et du gaz pour optimiser les décisions d'achat d'énergie.*
+*Ce projet vise à anticiper les périodes d'instabilité sur les marchés de l'électricité pour optimiser les décisions d'achat d'énergie.*
 
 </div>
 
