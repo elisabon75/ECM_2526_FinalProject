@@ -34,7 +34,7 @@ Une fois l'environnement configuré, l'exécution se fait en deux étapes :
 Pour lancer l'intégralité du traitement des données, entraîner les algorithmes et générer le fichier de résultats, exécutez la commande suivante :
 
 ```bash
-python Script/main.py
+python main.py
 ```
 
 **2. Visualisation des résultats (Dashboard)**
@@ -42,7 +42,7 @@ python Script/main.py
 Pour analyser visuellement les performances des modèles de manière interactive, démarrez l'interface web avec la commande suivante :
 
 ```bash
-streamlit run Script/dashboard.py
+streamlit run dashboard.py
 ```
 
 Cette commande ouvrira automatiquement le tableau de bord dans votre navigateur internet par défaut.
