@@ -1,71 +1,160 @@
-import streamlit as st
 import pandas as pd
-import plotly.express as px
+import numpy as np
+import streamlit as st
 import plotly.graph_objects as go
+import subprocess
+import os
+from pathlib import Path
 
-# Configuration de la page
-st.set_page_config(page_title="Energy Volatility Dashboard", layout="wide")
+st.set_page_config(page_title="Volatility Forecast Dashboard", layout="wide")
 
-st.title("⚡ Dashboard de Prédiction de la Volatilité Électrique")
-st.markdown("Ce dashboard présente les résultats des modèles entraînés pour prédire la volatilité du marché français.")
+st.title("Prédiction de la volatilité de l'électricité")
+st.markdown("Projet de Elisa Bon, Coralie Brouillet et Alexis Moisdon")
+st.markdown("""
+## Contexte
+Ce dashboard pilote **en direct** notre pipeline d'Intelligence Artificielle.
+Vous pouvez relancer l'entraînement des modèles depuis le menu latéral pour mettre à jour les prédictions.
+""")
+st.divider()
+
+# ====================
+# ORCHESTRATION DU PIPELINE
+# ====================
+CSV_PATH = "../Data/volatility_dashboard_data.csv"
 
 
-# 1. Chargement des données
-@st.cache_data
-def load_data():
-    df = pd.read_csv("../Data/volatility_dashboard_data.csv", index_col=0, parse_dates=True)
+def run_pipeline_safely():
+    """Lance le main.py dans un processus séparé pour éviter les crashs TensorFlow/Streamlit"""
+    try:
+        # Exécute la commande python main.py en arrière-plan
+        subprocess.run(["python", "main.py"], check=True)
+        return True
+    except subprocess.CalledProcessError as e:
+        st.error(f"❌ Le pipeline a échoué. Vérifiez le terminal.")
+        return False
+
+
+@st.cache_data(show_spinner=False)
+def load_data(file_path: str) -> pd.DataFrame:
+    df = pd.read_csv(file_path)
+    df["Date"] = pd.to_datetime(df["Date"])
+    df = df.sort_values("Date").reset_index(drop=True)
     return df
 
 
-try:
-    df = load_data()
+# ====================
+# FONCTIONS MÉTRIQUES & GRAPHIQUES
+# ====================
+def metrics(y_true: pd.Series, y_pred: pd.Series) -> dict:
+    y_true = y_true.astype(float).to_numpy()
+    y_pred = y_pred.astype(float).to_numpy()
+    mae = np.mean(np.abs(y_true - y_pred))
+    rmse = np.sqrt(np.mean((y_true - y_pred) ** 2))
+    eps = 1e-12
+    denom = np.where(np.abs(y_true) < eps, eps, np.abs(y_true))
+    mape = np.mean(np.abs((y_true - y_pred) / denom)) * 100.0
+    return {"MAE": mae, "RMSE": rmse, "MAPE (%)": mape}
 
-    # 2. Barre latérale : Sélection des modèles
-    st.sidebar.header("Configuration")
-    modeles_disponibles = [col for col in df.columns if col != 'Real_Volatility']
-    selection = st.sidebar.multiselect(
-        "Sélectionnez les modèles à afficher :",
-        modeles_disponibles,
-        default=modeles_disponibles[:3]  # On en affiche 3 par défaut
-    )
 
-    # 3. Graphique Interactif Principal
-    st.subheader("📈 Comparaison des prédictions vs Réalité")
+def ranking_table(df: pd.DataFrame, model_cols: list[str]) -> pd.DataFrame:
+    rows = []
+    for m in model_cols:
+        met = metrics(df["Real_Volatility"], df[m])
+        rows.append({"Model": m, "MAE": met["MAE"], "RMSE": met["RMSE"], "MAPE (%)": met["MAPE (%)"]})
+    return pd.DataFrame(rows)
+
+
+def rolling_rmse(df: pd.DataFrame, model_col: str, window: int) -> pd.Series:
+    err2 = (df["Real_Volatility"] - df[model_col]) ** 2
+    return np.sqrt(err2.rolling(window=window).mean())
+
+
+def line_chart(df: pd.DataFrame, models: list[str], pretty_dict: dict, key: str):
     fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df["Date"], y=df["Real_Volatility"], mode="lines", name="Vraie Volatilité",
+                             line=dict(color='black', width=2)))
+    for col in models:
+        fig.add_trace(go.Scatter(x=df["Date"], y=df[col], mode="lines", name=pretty_dict[col]))
+    fig.update_layout(title="Volatilité : Réelle vs Prédictions", xaxis_title="Date", yaxis_title="Volatilité",
+                      hovermode="x unified", height=520)
+    st.plotly_chart(fig, use_container_width=True, key=key)
 
-    # Ajout de la réalité
-    fig.add_trace(go.Scatter(x=df.index, y=df['Real_Volatility'], name="Réalité", line=dict(color='black', width=2)))
 
-    # Ajout des modèles sélectionnés
-    for m in selection:
-        fig.add_trace(go.Scatter(x=df.index, y=df[m], name=m, opacity=0.7))
+# ====================
+# INTERFACE UTILISATEUR
+# ====================
+with st.sidebar:
+    st.header("⚙ Paramètres")
 
-    fig.update_layout(hovermode="x unified", template="plotly_white", height=600)
-    st.plotly_chart(fig, use_container_width=True)
+    # BOUTON POUR RELANCER LE MAIN.PY DEPUIS STREAMLIT
+    if st.button("🚀 Relancer l'IA (Mettre à jour)"):
+        with st.spinner("Entraînement des modèles en cours... Merci de patienter."):
+            success = run_pipeline_safely()
+        if success:
+            st.success("✅ Modèles entraînés avec succès !")
+            st.cache_data.clear()  # On vide le cache pour forcer la lecture du nouveau CSV
 
-    # 4. Tableau des scores (ton fameux classement !)
-    st.divider()
-    st.subheader("🏆 Classement de Performance")
+# On vérifie si les données existent déjà
+if not os.path.exists(CSV_PATH):
+    st.warning(
+        "⚠️ Aucun résultat trouvé. Cliquez sur '🚀 Relancer l'IA' dans le menu de gauche pour générer les données.")
+    st.stop()
 
-    # On recalcule rapidement les métriques pour l'affichage
-    from sklearn.metrics import mean_absolute_error, mean_squared_error
-    import numpy as np
-
-    scores = []
-    for m in modeles_disponibles:
-        mask = df[m].notna()
-        mae = mean_absolute_error(df.loc[mask, 'Real_Volatility'], df.loc[mask, m])
-        rmse = np.sqrt(mean_squared_error(df.loc[mask, 'Real_Volatility'], df.loc[mask, m]))
-        scores.append({"Modèle": m, "MAE": mae, "RMSE": rmse})
-
-    df_scores = pd.DataFrame(scores).sort_values("RMSE")
-
-    col1, col2 = st.columns([1, 2])
-    with col1:
-        st.dataframe(df_scores.style.format({"MAE": "{:.4f}", "RMSE": "{:.4f}"}))
-    with col2:
-        st.info("Le modèle le plus performant sur cette période est le **" + df_scores.iloc[0]['Modèle'] + "**.")
-
+# Chargement sécurisé des données
+try:
+    df = load_data(CSV_PATH)
 except Exception as e:
-    st.error(f"Erreur lors du chargement du fichier : {e}")
-    st.info("Assure-vous que le fichier '../Data/volatility_dashboard_data.csv' existe bien.")
+    st.error("Erreur lors du chargement des résultats.")
+    st.stop()
+
+pretty_names = {
+    "Random_Forest_Prediction": "Random Forest",
+    "LSTM_Prediction": "LSTM (Deep Learning)",
+    "GARCH_X_Prediction": "ARX-GARCH (Mod3)",
+    "GARCH_Mod1_Prediction": "GARCH (Mod1)",
+    "MA7_Prediction": "Moyenne Mobile (7j)",
+    "Naive_Prediction": "Modèle Naïf (J-1)"
+}
+all_models = list(pretty_names.keys())
+
+with st.sidebar:
+    min_d, max_d = df["Date"].min().date(), df["Date"].max().date()
+    start_date, end_date = st.date_input("Période", value=(min_d, max_d), min_value=min_d, max_value=max_d)
+    default_selected = ["Random_Forest_Prediction", "GARCH_X_Prediction", "LSTM_Prediction"]
+    selected_models = st.multiselect("Modèles à afficher", options=all_models, default=default_selected,
+                                     format_func=lambda x: pretty_names[x])
+    rolling_window = st.slider("Fenêtre d'erreur (jours)", min_value=7, max_value=120, value=30, step=1)
+
+mask = (df["Date"].dt.date >= start_date) & (df["Date"].dt.date <= end_date)
+dff = df.loc[mask].copy()
+
+if not selected_models:
+    st.warning("Veuillez sélectionner au moins un modèle.")
+    st.stop()
+
+st.subheader("Indicateurs de performance")
+kpi_cols = st.columns(len(selected_models))
+
+for i, m in enumerate(selected_models):
+    met = metrics(dff["Real_Volatility"], dff[m])
+    with kpi_cols[i]:
+        st.markdown(f"<h4 style='text-align:center'>{pretty_names[m]}</h4>", unsafe_allow_html=True)
+        st.metric("MAE", f"{met['MAE']:.4f}")
+        st.metric("RMSE", f"{met['RMSE']:.4f}")
+
+st.subheader("📊 Courbes comparatives")
+line_chart(dff, selected_models, pretty_names, key="main_lines")
+
+st.subheader("🏆 Comparaison Globale")
+rank_df = ranking_table(dff, all_models).copy()
+rank_df["Model_Name"] = rank_df["Model"].map(pretty_names)
+crit = st.selectbox("Critère de classement", ["RMSE", "MAE", "MAPE (%)"], index=0)
+rank_df_sorted = rank_df.sort_values(crit, ascending=True).reset_index(drop=True)
+
+st.success(f"✅ Meilleur modèle sur la période filtrée : **{rank_df_sorted.loc[0, 'Model_Name']}**")
+
+fig_bar = go.Figure()
+for metric_name in ["MAE", "RMSE"]:
+    fig_bar.add_trace(go.Bar(x=rank_df_sorted["Model_Name"], y=rank_df_sorted[metric_name], name=metric_name))
+fig_bar.update_layout(title="Métriques par modèle", barmode="group", height=420)
+st.plotly_chart(fig_bar, use_container_width=True)
