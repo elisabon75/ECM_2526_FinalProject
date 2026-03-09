@@ -27,7 +27,7 @@ Ce dossier contient la base de notre projet : les données brutes et les résult
 ###  2. Dossier `Notebooks/` (Recherche & Exploration)
 C'est ici que se trouve notre **code Google Colab (`.ipynb`)**. 
 - Il contient toute l'analyse exploratoire des données (EDA), les tests de modèles et les visualisations graphiques. C'est le laboratoire de recherche du projet.
-- 
+
 ### 3. Dossier `Script/` (Industrialisation & Automatisation)
 
 C'est la partie la plus critique pour la mise en production. Nous avons transformé le code exploratoire du Notebook en une architecture de fichiers Python (`.py`) entièrement modulaires.
