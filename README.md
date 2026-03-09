@@ -121,7 +121,7 @@ streamlit run Script/dashboard.py
 ```
 ### Teaching & Supervision
 
-This project was developed as part of a **Machine Learning course** at École Centrale Méditerranéen.
+This project was developed as part of a **Machine Learning course** at École Centrale Méditerranée.
 
 **Course given by:** 🎓 **[Sitraka Matthieu FORLER](https://www.linkedin.com/in/sitraka-matthieu-forler/)** *Senior Data Scientist & AI Architect | Professor of Applied Machine Learning*
 
